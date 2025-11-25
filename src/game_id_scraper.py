@@ -2,25 +2,29 @@ import requests
 import pandas as pd
 import time
 
-# initialization
-url = "https://steamspy.com/api.php"
-pages = 10
+def main():
+    # initialization
+    url = "https://steamspy.com/api.php"
+    pages = 10
 
-ID_list = []
+    ID_list = []
 
-for i in range(pages):
-    # requesting
-    params = {"request": "all", "page": str(i)}
-    response = requests.get(url, params=params)
+    for i in range(pages):
+        # requesting
+        params = {"request": "all", "page": str(i)}
+        response = requests.get(url, params=params)
 
-    # adding data to list
-    ID_list = ID_list + list(response.json().keys())
+        # adding data to list
+        ID_list = ID_list + list(response.json().keys())
 
-    print(i+1, "/", pages) # tracking progress
-    if i != pages-1:
-        time.sleep(60)
+        print(i+1, "/", pages) # tracking progress
+        if i != pages-1:
+            time.sleep(60)
 
-# turning data into dataframe and saving
-df = pd.DataFrame(ID_list)
-df = df.rename(columns={0: "AppID"})
-df.to_csv("../data/games_appid.csv")
+    # turning data into dataframe and saving
+    df = pd.DataFrame(ID_list)
+    df = df.rename(columns={0: "AppID"})
+    df.to_csv("../data/games_appid.csv")
+
+if __name__ == "__main__":
+    main()
