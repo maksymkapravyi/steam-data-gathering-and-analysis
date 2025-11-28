@@ -15,8 +15,8 @@ def main():
     game_info = game_info.drop(columns=['score_rank'])
 
     # Languages
-    game_info.drop([3981], inplace=True)
-    game_tags.drop([3981], inplace=True)
+    game_info.drop(game_info[game_info["name"] == "Removed"].index, inplace=True)
+    game_tags.drop(game_info[game_info["name"] == "Removed"].index, inplace=True)
     game_info.loc[2565, 'languages'] = 'English, French, German'
 
     # Developer and publisher
