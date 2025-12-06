@@ -17,7 +17,7 @@ def main():
     # Languages
     game_info.drop(game_info[game_info["name"] == "Removed"].index, inplace=True)
     game_tags.drop(game_info[game_info["name"] == "Removed"].index, inplace=True)
-    game_info.loc[2565, 'languages'] = 'English, French, German'
+    game_info.loc[game_info['appid'] == 319150, 'languages'] = 'English, French, German'
 
     # Developer and publisher
     game_info.loc[game_info.developer.isna(), "developer"] = game_info.loc[game_info.developer.isna(), "publisher"]
@@ -61,17 +61,17 @@ def main():
     tags_extracted['second tag'] = game_tags.apply(get_second_largest_col, axis=1)
 
     # Creating feautes
-    game_info['review_ratio '] = game_info['positive'] / game_info['positive'] + game_info['negative'] + 1
+    game_info['review_ratio'] = game_info['positive'] / (game_info['positive'] + game_info['negative'] + 1)
     game_info['popularity_change'] = game_info['average_2weeks'] - game_info['average_forever']
     game_info['price_change'] = game_info['initialprice'] - game_info['price']
-    game_info['engagement_spread'] = game_info['average_forever'] / game_info['median_forever'] + 1
+    game_info['engagement_spread'] = game_info['average_forever'] / (game_info['median_forever'] + 1)
     game_info['language_count'] = languages_encoded.T.sum()
 
     game_info = game_info.drop(columns=['userscore', 'languages', 'genre', 'discount', 'median_2weeks'])
 
     #saving
     df = pd.concat([game_info, tags_extracted, languages_encoded, genres_encoded], axis=1)
-    df.to_csv("../data/processed_game_data.csv")
+    df.to_csv("../data/processed_game_data.csv", index=False)
 
 
 if __name__ == "__main__":
