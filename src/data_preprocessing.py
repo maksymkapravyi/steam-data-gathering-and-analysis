@@ -5,6 +5,12 @@ def get_second_largest_col(row):
     sorted_cols = row.sort_values(ascending=False).index
     return sorted_cols[1]
 
+def owners_to_numeric(range):
+    range = range.replace(',', '')
+    lower_boundary = int(range[:range.find(' .. ')])
+    upper_boundary = int(range[range.find(' .. ')+4:])
+    return (upper_boundary + lower_boundary) / 2
+
 def main():
     df = pd.read_csv("../data/raw_game_data.csv")
     df = df.drop(columns=['Unnamed: 0'])
@@ -66,8 +72,10 @@ def main():
     game_info['price_change'] = game_info['initialprice'] - game_info['price']
     game_info['engagement_spread'] = game_info['average_forever'] / (game_info['median_forever'] + 1)
     game_info['language_count'] = languages_encoded.T.sum()
+    game_info['owners_numeric'] = game_info['owners'].apply(owners_to_numeric)
+    game_info['revenue'] = game_info['owners_numeric'] * game_info['initialprice']
 
-    game_info = game_info.drop(columns=['userscore', 'languages', 'genre', 'discount', 'median_2weeks'])
+    game_info = game_info.drop(columns=['userscore', 'languages', 'genre', 'discount', 'price'])
 
     #saving
     df = pd.concat([game_info, tags_extracted, languages_encoded, genres_encoded], axis=1)
