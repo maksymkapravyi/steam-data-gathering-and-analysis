@@ -61,7 +61,6 @@ def main():
     languages_encoded = languages_encoded.fillna(0)
 
     # Tags extracting
-    game_tags = game_tags.fillna(0)
     tags_extracted = pd.DataFrame(game_tags.idxmax(axis="columns"))
     tags_extracted = tags_extracted.rename(columns={0: "first tag"})
     tags_extracted['second tag'] = game_tags.apply(get_second_largest_col, axis=1)
@@ -69,7 +68,6 @@ def main():
     # Creating feautes
     game_info['review_ratio'] = game_info['positive'] / (game_info['positive'] + game_info['negative'] + 1)
     game_info['popularity_change'] = game_info['average_2weeks'] - game_info['average_forever']
-    game_info['price_change'] = game_info['initialprice'] - game_info['price']
     game_info['engagement_spread'] = game_info['average_forever'] / (game_info['median_forever'] + 1)
     game_info['language_count'] = languages_encoded.T.sum()
     game_info['owners_numeric'] = game_info['owners'].apply(owners_to_numeric)
